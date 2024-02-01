@@ -1,0 +1,60 @@
+/* public/style.css */
+
+body {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #808080; /* Fundo cinza */
+    color: #fff;
+  }
+  
+  #pong-table {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    background-color: #009933; /* Cor verde para o campo */
+    border: 2px solid #fff; /* Bordas brancas */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Sombra para destacar o campo */
+  }
+  
+  .paddle {
+    position: absolute;
+    width: 10px;
+    height: 80px;
+    background-color: #fff; /* Cor padrão para paletas */
+  }
+  
+  #player1 {
+    left: 10px;
+    background-color: #ff0000; /* Cor para jogador 1 (vermelho) */
+  }
+  
+  #player2 {
+    right: 10px;
+    background-color: #0000ff; /* Cor para jogador 2 (azul) */
+  }
+  
+  .ball {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Linha central (risca da rede) */
+  #net {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background-color: #fff;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  
