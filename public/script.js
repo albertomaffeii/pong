@@ -1,81 +1,74 @@
 // public/script.js
 const socket = io();
 
-// Variáveis para rastrear teclas pressionadas
-const keysPressed = { 'a': false, 'z': false, 'l': false, 'm': false };
+// Variabili per tracciare i tasti premuti
+const tastiPremuti = { 'a': false, 'z': false, 'l': false, 'm': false };
 
-
-// Variáveis para controlar as direções anteriores dos jogadores
-let lastPlayer1Direction = 'stop';
-let lastPlayer2Direction = 'stop';
-
+// Variabili per controllare le direzioni precedenti dei giocatori
+let ultimaDirezioneGiocatore1 = 'stop';
+let ultimaDirezioneGiocatore2 = 'stop';
 
 socket.on('connect', () => {
-  console.log('Conectado ao servidor WebSocket');
+  console.log('Connesso al server WebSocket');
 });
 
 socket.on('disconnect', () => {
-  console.log('Desconectado do servidor WebSocket');
+  console.log('Disconnesso dal server WebSocket');
 });
 
-const paddleSpeed = 5; // Velocidade de movimento da paleta
+const velocitaPala = 5; // Velocità di movimento della pala
 
-// Obtenha elementos do DOM
-const player1 = document.getElementById('player1');
-const player2 = document.getElementById('player2');
-const ball = document.querySelector('.ball');
+// Ottiene elementi dal DOM
+const giocatore1 = document.getElementById('player1');
+const giocatore2 = document.getElementById('player2');
+const palla = document.querySelector('.ball');
 
-// Adicione eventos de teclado para os jogadores
-document.addEventListener('keydown', (event) => {
-  const key = event.key.toLowerCase();
-  keysPressed[key] = true;
-  handleKeyEvents();
+// Aggiunge eventi tastiera per i giocatori
+document.addEventListener('keydown', (evento) => {
+  const tasto = evento.key.toLowerCase();
+  tastiPremuti[tasto] = true;
+  gestisciEventiTastiera();
 });
 
-// Remova a parte relacionada ao keyup
-document.addEventListener('keyup', (event) => {
-    const key = event.key.toLowerCase();
-    keysPressed[key] = false;
-    // Remova a chamada para handleKeyEvents aqui
-  });
-  
+document.addEventListener('keyup', (evento) => {
+    const tasto = evento.key.toLowerCase();
+    tastiPremuti[tasto] = false;
+    gestisciEventiTastiera();
+  });  
 
-// Função para lidar com os eventos de tecla
-function handleKeyEvents() {
-  const player1Direction = keysPressed['a'] ? 'up' : keysPressed['z'] ? 'down' : 'stop';
-  const player2Direction = keysPressed['l'] ? 'up' : keysPressed['m'] ? 'down' : 'stop';
+// Gestisce gli eventi della tastiera
+function gestisciEventiTastiera() {
+  const direzioneGiocatore1 = tastiPremuti['a'] ? 'up' : tastiPremuti['z'] ? 'down' : 'stop';
+  const direzioneGiocatore2 = tastiPremuti['l'] ? 'up' : tastiPremuti['m'] ? 'down' : 'stop';
 
-  // Emita eventos para atualizar a posição da paleta no servidor
-  socket.emit('move', { player: 'player1', direction: player1Direction });
-  socket.emit('move', { player: 'player2', direction: player2Direction });
+  // Emette eventi per aggiornare la posizione della pala sul server
+  socket.emit('move', { player: 'player1', direction: direzioneGiocatore1 });
+  socket.emit('move', { player: 'player2', direction: direzioneGiocatore2 });
 }
+  
+socket.on('updatePaddle', ({ player, direction }) => {
+  const pala = player === 'player1' ? giocatore1 : giocatore2;
 
-  
-  socket.on('updatePaddle', ({ player, direction }) => {
-    const paddle = player === 'player1' ? player1 : player2;
-  
-    if (direction === 'reset') {
-      // Lógica de reset da paleta se necessário
-      paddle.style.top = '160px'; // Defina a posição inicial da paleta
-    } else if (direction === 'up') {
-      // Lógica de movimento para cima
-      paddle.style.top = Math.max(parseFloat(paddle.style.top) - paddleSpeed, 0) + 'px';
-    } else if (direction === 'down') {
-      // Lógica de movimento para baixo
-      paddle.style.top = Math.min(parseFloat(paddle.style.top) + paddleSpeed, 400 - parseFloat(paddle.style.height)) + 'px';
-    } else if (direction === 'stop') {
-      // Lógica para parar a paleta
-      // Aqui, você pode optar por não fazer nada ou ajustar conforme necessário
-    }
-  });
+  if (direction === 'reset') {
+    pala.style.top = '160px'; // Imposta la posizione iniziale della pala
+  } else if (direction === 'up') {
+    // Logica di movimento verso l'alto
+    pala.style.top = Math.max(parseFloat(pala.style.top) - velocitaPala, 0) + 'px';
+  } else if (direction === 'down') {
+    // Logica di movimento verso il basso
+    pala.style.top = Math.min(parseFloat(pala.style.top) + velocitaPala, 400 - parseFloat(pala.style.height)) + 'px';
+  } else if (direction === 'stop') {
+    // Logica per fermare la pala
+  }
+});
 
 socket.on('updateBall', ({ x, y }) => {
-  // Atualize a posição da bola
-  ball.style.left = x + 'px';
-  ball.style.top = y + 'px';
+  // Aggiorna la posizione della palla
+  palla.style.left = x + 'px';
+  palla.style.top = y + 'px';
 });
 
 socket.on('goal', ({ scoringPlayer }) => {
-  // Lógica quando um gol é marcado
-  console.log(`Gol! Jogador ${scoringPlayer} pontuou.`);
+  // Logica quando viene segnato un gol
+  console.log(`Goal! Il giocatore ${scoringPlayer} ha segnato.`);
 });

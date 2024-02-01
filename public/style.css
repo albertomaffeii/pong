@@ -1,42 +1,46 @@
 /* public/style.css */
-
+/*body: Stile per il corpo del documento, impostando il margine a zero e centrando il contenuto. */
 body {
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #808080; /* Fundo cinza */
+    background-color: #808080; /* Sfondo grigio */
     color: #fff;
-  }
-  
-  #pong-table {
+}
+
+/*#pong-table: Stile per il tavolo di gioco, definendo larghezza, altezza, colore di sfondo, bordi e ombra.*/
+#pong-table {
     position: relative;
     width: 600px;
     height: 400px;
-    background-color: #009933; /* Cor verde para o campo */
-    border: 2px solid #fff; /* Bordas brancas */
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Sombra para destacar o campo */
-  }
-  
-  .paddle {
+    background-color: #009933; /* Colore verde per il campo */
+    border: 2px solid #fff; /* Bordi bianchi */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Ombra per evidenziare il campo */
+}
+
+/*.paddle: Stile generico per le palette dei giocatori.*/
+.paddle {
     position: absolute;
     width: 10px;
     height: 80px;
-    background-color: #fff; /* Cor padrão para paletas */
-  }
-  
-  #player1 {
+    background-color: #fff; /* Colore predefinito per le palette */
+}
+
+/*#player1 e #player2: Stili specifici per le palette del giocatore 1 e del giocatore 2, con colori distinti.*/
+#player1 {
     left: 10px;
-    background-color: #ff0000; /* Cor para jogador 1 (vermelho) */
-  }
-  
-  #player2 {
+    background-color: #ff0000; /* Colore per giocatore 1 (rosso) */
+}
+
+#player2 {
     right: 10px;
-    background-color: #0000ff; /* Cor para jogador 2 (azul) */
-  }
-  
-  .ball {
+    background-color: #0000ff; /* Colore per giocatore 2 (blu) */
+}
+
+/*.ball: Stile per la palla, impostando dimensioni, colore di sfondo, e bordi arrotondati.*/
+.ball {
     position: absolute;
     width: 10px;
     height: 10px;
@@ -45,16 +49,15 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-  }
-  
-  /* Linha central (risca da rede) */
-  #net {
+}
+
+/* Linea centrale (rete) */
+/*#net: Stile per la linea centrale (rete) che attraversa il campo.*/
+#net {
     position: absolute;
     width: 2px;
     height: 100%;
     background-color: #fff;
     left: 50%;
     transform: translateX(-50%);
-  }
-
-  
+}

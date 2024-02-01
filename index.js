@@ -9,47 +9,45 @@ const io = new Server(server);
 
 app.use(express.static('public'));
 
-const paddleSpeed = 5; // Velocidade de movimento da paleta
+const paddleSpeed = 5; // Velocità di movimento della pala
 
-// Inicialize as posições iniciais dos jogadores e da bola
-let player1Pos = 160; // Posição vertical inicial do jogador 1
-let player2Pos = 160; // Posição vertical inicial do jogador 2
-let ballPos = { x: 300, y: 200 }; // Posição inicial da bola
-let ballSpeed = { x: 3, y: 2 }; // Velocidade inicial da bola
+// Inizializza le posizioni iniziali dei giocatori e della palla
+let player1Pos = 160; // Posizione verticale iniziale del giocatore 1
+let player2Pos = 160; // Posizione verticale iniziale del giocatore 2
+let ballPos = { x: 300, y: 200 }; // Posizione iniziale della palla
+let ballSpeed = { x: 3, y: 2 }; // Velocità iniziale della palla
 
 io.on('connection', (socket) => {
-  console.log('Novo Jogo Iniciado');
+  console.log('Nuovo gioco avviato');
 
   socket.on('move', ({ player, direction }) => {
     if (direction === 'up' || direction === 'down' || direction === 'stop' || direction === 'reset') {
       if (direction === 'reset') {
-        // Lógica de reset da paleta se necessário
+        // Logica di reset della pala se necessario
         io.emit('updatePaddle', { player, direction });
       } else {
-        // Lógica de movimento normal da paleta
+        // Logica di movimento normale della pala
         io.emit('updatePaddle', { player, direction });
       }
     }
   });
-  
 
-  
-    socket.on('disconnect', () => {
-    console.log('Jogo finalizado');
+  socket.on('disconnect', () => {
+    console.log('Gioco terminato');
   });
 });
 
-// Lógica para atualizar a posição da bola e verificar se há um gol
+// Logica per aggiornare la posizione della palla e verificare se c'è un gol
 setInterval(() => {
   ballPos.x += ballSpeed.x;
   ballPos.y += ballSpeed.y;
 
-  // Lógica para colisões com as bordas do campo
+  // Logica per collisioni con i bordi del campo
   if (ballPos.y <= 0 || ballPos.y >= 390) {
     ballSpeed.y = -ballSpeed.y;
   }
 
-  // Lógica para colisões com as paletas dos jogadores
+  // Logica per collisioni con le palette dei giocatori
   if (
     (ballPos.x <= 20 && ballPos.x >= 10 && ballPos.y >= player1Pos && ballPos.y <= player1Pos + 80) ||
     (ballPos.x >= 570 && ballPos.x <= 580 && ballPos.y >= player2Pos && ballPos.y <= player2Pos + 80)
@@ -57,7 +55,7 @@ setInterval(() => {
     ballSpeed.x = -ballSpeed.x;
   }
 
-  // Lógica para verificar se a bola ultrapassou a linha de fundo
+  // Logica per verificare se la palla ha superato la linea di fondo
   if (ballPos.x < 0) {
     io.emit('goal', { scoringPlayer: 'player2' });
     resetGame();
@@ -66,23 +64,23 @@ setInterval(() => {
     resetGame();
   }
 
-  // Emita eventos para atualizar a posição da bola no cliente
+  // Emetti eventi per aggiornare la posizione della palla sul client
   io.emit('updateBall', { x: ballPos.x, y: ballPos.y });
 }, 16);
 
 function resetGame() {
-  // Reseta as posições da bola e das paletas para o início do jogo
+  // Reimposta le posizioni della palla e delle palette all'inizio del gioco
   player1Pos = 160;
   player2Pos = 160;
   ballPos = { x: 300, y: 200 };
   ballSpeed = { x: 3, y: 2 };
 
-  // Emita eventos para atualizar as posições no cliente
+  // Emetti eventi per aggiornare le posizioni sul client
   io.emit('updatePaddle', { player: 'player1', direction: 'reset' });
   io.emit('updatePaddle', { player: 'player2', direction: 'reset' });
   io.emit('updateBall', { x: ballPos.x, y: ballPos.y });
 }
 
 server.listen(3000, () => {
-  console.log('Servidor iniciado na porta 3000');
+  console.log('Server avviato sulla porta 3000');
 });
