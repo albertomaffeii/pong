@@ -17,7 +17,14 @@ const PORT = 3000;
 io.on('connection', (socket) => {
   console.log('Novo cliente conectado');
 
-  // Aqui você pode adicionar lógica para lidar com eventos do cliente
+    // Join room
+    socket.on('join room', (room) => {
+      socket.join(room);
+      console.log(`Cliente entrou na sala: ${room}`);
+
+      // 
+      socket.emit('bem-vindo', 'Benvenuto nella sala: ${room}');
+    }); 
 
   socket.on('disconnect', () => {
     console.log('Cliente desconectado');
